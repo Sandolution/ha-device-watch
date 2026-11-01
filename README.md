@@ -1,65 +1,82 @@
-<img src="brand/icon.png" alt="Device Watch" width="128" align="right">
+<img src="brand/icon.png" alt="Device Watch" width="112" align="right">
 
 # Device Watch
 
-A Home Assistant integration that watches **every physical device** for going offline
-and for a low battery. It reports both by the device's own name.
+[![hacs](https://img.shields.io/badge/HACS-custom-orange.svg)](https://hacs.xyz/docs/faq/custom_repositories/)
+[![license](https://img.shields.io/github/license/Sandolution/ha-device-watch)](LICENSE)
 
-It reads the device registry instead of a list you keep up to date, so a device added
-tomorrow is watched tomorrow. Device Watch decides *what* counts and *when*; it fires
-events and keeps two summary sensors. How you hear about it (phone notification,
-dashboard, anything else) is up to an automation of your own.
+Tells you which device dropped off the network or needs a new battery, by its
+own name, and doesn't forget the devices you add next month.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/device-watch-events-dark.png">
+  <img alt="Two devices offline and a low battery, shown on a dashboard" src="images/device-watch-events-light.png" width="460">
+</picture>
+
+Device Watch reads the device registry instead of a list you keep up to date, so
+a device added tomorrow is watched tomorrow. It decides what counts and when,
+and then fires an event and updates two sensors. How you hear about it (a phone
+notification, a dashboard, both) is an automation of your own; there is an
+[example](#example-automation) below.
+
+The picture above is the [Home Events](https://github.com/Sandolution/ha-home-events)
+card reading Device Watch's two sensors. Any card that shows a sensor and its
+attributes will do.
 
 ## Installation
 
-1. In HACS, open the menu → **Custom repositories**, and add
-   `https://github.com/Sandolution/ha-device-watch` with the type **Integration**.
-2. Install **Device Watch** and restart Home Assistant.
-3. Go to **Settings → Devices & services → Add integration** and pick **Device Watch**.
-   There is nothing to fill in.
+### HACS
+
+1. In HACS, open the menu (⋮) → **Custom repositories**.
+2. Add `https://github.com/Sandolution/ha-device-watch` with the type **Integration**.
+3. Install **Device Watch** and restart Home Assistant.
+4. Go to **Settings → Devices & services → Add integration** and pick
+   **Device Watch**. There is nothing to fill in.
+
+### Manual
+
+1. Copy `custom_components/device_watch` from this repository into
+   `config/custom_components/`.
+2. Restart Home Assistant.
+3. Add it under **Settings → Devices & services → Add integration**.
 
 ## What counts
 
-**Watched devices:** every device in the registry, except:
+**Watched devices:** every device in the registry, except service devices
+(integrations that show up as a device), disabled devices, and devices labelled
+**Device Watch | Unwatched**.
 
-- service devices, such as integrations that show up as a device;
-- disabled devices;
-- devices labelled **Device Watch | Unwatched**.
+**Offline:** a device is offline when all of its own entities are
+`unavailable`. *Own* means coming from the device's own integration: entities
+that other integrations hang on a device, like Powercalc's or utility_meter's,
+keep their state when the device is gone, so they don't count. On a device that
+others name as their parent (`via_device`), such as the Zigbee2MQTT bridge, a
+`connectivity` sensor reading `off` counts as unavailable too.
 
-**Offline:** a device is offline when **all of its own entities** are `unavailable`.
+**When it is reported:**
 
-- *Own* means coming from the device's own integration. Entities that other
-  integrations attach to a device (Powercalc, utility_meter, …) keep their state when the
-  device is gone, so they never count.
-- On a **parent** device (one that others name as their `via_device`, such as the
-  Zigbee2MQTT bridge), a `connectivity` binary sensor reading `off` also counts.
+- after 15 minutes offline, or 5 for a device labelled **Device Watch | Critical**;
+- not while its parent is offline. Once the parent is back, the device gets its
+  own delay again, so a Zigbee2MQTT restart doesn't report eighty devices;
+- devices that reach their delay within 2 minutes of each other are reported
+  together, as one group;
+- a reported device is back as soon as one of its own entities has a state again.
 
-**When an offline device is reported:**
+**Low battery:** any `battery` entity on the device (from any integration) below
+20 % for an hour, or a battery `binary_sensor` that is `on` for an hour. It is
+cleared above 30 %, which means a new battery rather than a reading wobbling
+around 20 %. A battery isn't judged while its device is offline.
 
-- after 15 minutes, or after 5 minutes when the device is labelled **Device Watch |
-  Critical**;
-- not while its parent device is offline. After the parent comes back, the device gets
-  its own delay again;
-- devices that reach their delay within 2 minutes of each other are reported together,
-  as one group;
-- a reported device is "back" as soon as one of its own entities has a state again.
+**Restarts:** what has been reported is kept, so a restart neither repeats a
+report nor forgets one. Nothing is judged in the first 5 minutes after Home
+Assistant starts, while MQTT devices are still coming back.
 
-**Low battery:**
+## Configuration
 
-- A low battery is any `battery` entity on the device below 20 % for an hour. A
-  `binary_sensor` of class `battery` counts when it reads `on`.
-- It is cleared above 30 %: a new battery, not a reading wobbling around 20 %.
-- The battery isn't judged while the device is offline.
-- Devices labelled **Device Watch | No Battery Alerts** are skipped for this.
+### Labels
 
-**Restarts:** what has been reported is kept across restarts, so a restart neither
-repeats a report nor forgets one. Nothing is judged in the first 5 minutes after Home
-Assistant starts, while MQTT devices are still reconnecting.
-
-## Settings
-
-**Per device:** labels on the device page. Device Watch creates these labels on startup
-if they don't exist yet.
+Per device, set on the device page. Device Watch creates the labels when it
+starts, if they don't exist yet.
 
 | Label | Effect |
 |---|---|
@@ -68,9 +85,18 @@ if they don't exist yet.
 | Device Watch \| No Battery Alerts | The device is watched for going offline; its battery is not. |
 
 A device without any of these labels is watched for both, with the normal delay.
+Use Unwatched for things that are off by design: a wall tablet that sleeps, a
+seasonal light, a module that loses power with its plug.
 
-**Thresholds:** under **Configure** on the integration. Changes apply without a restart.
-Adding the integration asks nothing; these are its only options.
+### Options
+
+Under **Configure** on the integration. Changes apply without a restart. Adding
+the integration asks nothing; these are its only options.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="images/device-watch-options-dark.png">
+  <img alt="The Device Watch options dialog" src="images/device-watch-options-light.png" width="480">
+</picture>
 
 | Option | Values | Default | What it does |
 |---|---|---|---|
@@ -85,31 +111,38 @@ Adding the integration asks nothing; these are its only options.
 
 | Entity | State | Attributes |
 |---|---|---|
-| `sensor.system_device_watch_offline` | number of reported offline devices | `devices`, `names`, `title`, `detail` |
-| `sensor.system_device_watch_battery_low` | number of reported low batteries | `devices`, `names`, `title`, `detail` |
+| `sensor.system_device_watch_offline` | how many devices are reported offline | `devices`, `names`, `title`, `detail` |
+| `sensor.system_device_watch_battery_low` | how many devices have a reported low battery | `devices`, `names`, `title`, `detail` |
 
-`title` is the device name for one device, and "3 devices offline" or "3 low
-batteries" for several. `detail` lists the names when there are several, or the battery
-level for one. Both are ready to use on a dashboard.
+| Attribute | What it holds |
+|---|---|
+| `devices` | a list of the devices, with the fields listed under [Events](#events) |
+| `names` | their names, joined with commas |
+| `title` | the device's name when there is one, "3 devices offline" or "3 low batteries" when there are more |
+| `detail` | the names when there are several; for a single low battery, its level ("12 %"); otherwise empty |
+
+`title` and `detail` are there so a dashboard card can show a sensor as one
+line without a template.
 
 ## Events
 
 | Event | Data |
 |---|---|
-| `device_watch_offline` | `group_id`, `devices` (list), `count`, `critical` |
-| `device_watch_online` | `group_id`, `device` (the one that is back), `remaining` (still offline from that group) |
+| `device_watch_offline` | `group_id`, `devices` (a list), `count` (how many), `critical` (`true` when any of them is Critical) |
+| `device_watch_online` | `group_id`, `device` (the one that is back), `remaining` (the devices of that group still offline) |
 | `device_watch_battery_low` | `device` |
 | `device_watch_battery_ok` | `device` |
 
-**Device fields:**
-- offline and online devices: `device_id`, `name`, `area`, `since`, `critical`,
-  `battery_level`;
-- battery devices: `device_id`, `name`, `area`, `since`, `entity_id`, `level`.
+A device in an offline or online event has `device_id`, `name`, `area`, `since`
+(when it went offline), `critical` and `battery_level` (the last known level, or
+`null`). A device in a battery event has `device_id`, `name`, `area`, `since`
+(when it went low), `entity_id` (the battery entity) and `level` (`null` for a
+battery `binary_sensor`).
 
 ### Example automation
 
-A phone notification per group that is updated as devices come back. Replace
-`notify.mobile_app_phone` with your own notify action.
+One phone notification per group, updated as devices come back and cleared with
+the last one. Replace `notify.mobile_app_phone` with your own.
 
 ```yaml
 - alias: Device Watch - Notify
@@ -153,21 +186,23 @@ A phone notification per group that is updated as devices come back. Replace
   mode: queued
 ```
 
-## Checking it
+## When something doesn't arrive
 
-The WebSocket command `device_watch/status` (admin only) lists every device Device
-Watch considered:
+The WebSocket command `device_watch/status` (admin only) lists every device
+Device Watch looked at: whether it is watched and if not why, whether it is
+offline and since when, whether that was reported, and its battery entity and
+level. The quickest way to read it is the browser's own console, on any Home
+Assistant page:
 
-- whether it is watched, and if not, why;
-- whether it is offline, since when, and whether that was reported;
-- its battery entity and level.
+```js
+await document.querySelector("home-assistant").hass.callWS({ type: "device_watch/status" })
+```
 
-It is the first thing to look at when a report did or did not arrive.
+[SPEC.md](SPEC.md) has the reasoning behind each rule.
 
-## Background
+## Requirements
 
-[SPEC.md](SPEC.md) is the specification the integration was built from, with the
-reasoning behind each rule.
+Home Assistant 2024.12 or newer.
 
 ## License
 
