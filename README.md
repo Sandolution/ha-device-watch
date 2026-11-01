@@ -1,3 +1,5 @@
+<img src="brand/icon.png" alt="Device Watch" width="128" align="right">
+
 # Device Watch
 
 A Home Assistant integration that watches **every physical device** for going offline
@@ -163,3 +165,7 @@ It is the first thing to look at when a report did or did not arrive.
 
 [SPEC.md](SPEC.md) is the specification the integration was built from, with the
 reasoning behind each rule.
+
+## License
+
+[MIT](LICENSE)
