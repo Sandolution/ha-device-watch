@@ -1,0 +1,14 @@
+{
+  "domain": "device_watch",
+  "name": "Device Watch",
+  "codeowners": ["@sandolution"],
+  "config_flow": true,
+  "dependencies": ["websocket_api"],
+  "documentation": "https://github.com/sandolution/device-watch",
+  "integration_type": "service",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/sandolution/device-watch/issues",
+  "requirements": [],
+  "single_config_entry": true,
+  "version": "0.1.0"
+}
