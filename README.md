@@ -63,20 +63,23 @@ if they don't exist yet.
 
 | Label | Effect |
 |---|---|
-| Device Watch \| Unwatched | Ignored completely; still used as a parent |
-| Device Watch \| Critical | Offline after the Critical delay; marked `critical` in events |
-| Device Watch \| No Battery Alerts | Offline is watched, the battery is not |
+| Device Watch \| Unwatched | The device is ignored completely. It still counts as a parent for the devices under it. |
+| Device Watch \| Critical | Offline after the Critical delay instead of the normal one, and marked `critical: true` in the offline event. |
+| Device Watch \| No Battery Alerts | The device is watched for going offline; its battery is not. |
+
+A device without any of these labels is watched for both, with the normal delay.
 
 **Thresholds:** under **Configure** on the integration. Changes apply without a restart.
+Adding the integration asks nothing; these are its only options.
 
-| Option | Default |
-|---|---|
-| Offline after | 15 min |
-| Offline after (Critical) | 5 min |
-| Battery low below | 20 % |
-| Battery low for | 60 min |
-| Battery cleared above | 30 % |
-| Group window | 2 min |
+| Option | Values | Default | What it does |
+|---|---|---|---|
+| Offline after | 1 to 1440 minutes | 15 | How long every own entity of a device has to be unavailable before it is reported. |
+| Offline after (Critical) | 1 to 1440 minutes | 5 | The same, for devices labelled Device Watch \| Critical. |
+| Battery low below | 1 to 99 % | 20 | A battery level below this counts as low. |
+| Battery low for | 0 to 1440 minutes | 60 | How long it has to stay low before it is reported. `0` reports it at once. |
+| Battery cleared above | 2 to 100 % | 30 | A reported battery is cleared once its level is above this. Has to be higher than *Battery low below*. |
+| Group window | 0 to 60 minutes | 2 | Devices that reach their delay within this window of the first one are reported together. With `0`, only devices that reach their delay in the same half minute are grouped. |
 
 ## Sensors
 
