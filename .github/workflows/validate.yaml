@@ -22,6 +22,3 @@ jobs:
       - uses: hacs/action@main
         with:
           category: integration
-          # Not (yet) in home-assistant/brands; HACS installs it as a custom
-          # repository regardless.
-          ignore: brands

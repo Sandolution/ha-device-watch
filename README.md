@@ -1,4 +1,4 @@
-<img src="brand/icon.png" alt="Device Watch" width="112" align="right">
+<img src="custom_components/device_watch/brand/icon.png" alt="Device Watch" width="112" align="right">
 
 # Device Watch
 
