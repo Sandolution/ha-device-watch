@@ -124,6 +124,24 @@ the integration asks nothing; these are its only options.
 `title` and `detail` are there so a dashboard card can show a sensor as one
 line without a template.
 
+The Home Events card can open `devices` into a row per device instead, each
+with its own area and offline time; a tap on one opens the device. The event
+behind the picture above:
+
+```yaml
+devices_offline:
+  include: {entities: [sensor.system_device_watch_offline]}
+  conditions: [{condition: numeric_state, above: 0}]
+  category: alerts
+  severity: attention
+  group: entries
+  entries: {attribute: devices, time: since}
+  always_group: true
+  title: {many: Devices offline}
+  status: {each: Offline, many: "{n}"}
+  icon: mdi:lan-disconnect
+```
+
 ## Events
 
 | Event | Data |
