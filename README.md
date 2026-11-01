@@ -204,6 +204,10 @@ await document.querySelector("home-assistant").hass.callWS({ type: "device_watch
 
 Home Assistant 2024.12 or newer.
 
+## Built with
+
+[Claude Code](https://claude.com/claude-code).
+
 ## License
 
 [MIT](LICENSE)
