@@ -176,7 +176,7 @@ picture is not an offline device, because its switches and sensors stay up.
 
 ## 8. Build and rollout
 
-1. **Code:** its own repository (`sandolution/device-watch`), installed through HACS as a
+1. **Code:** its own repository (`Sandolution/ha-device-watch`), installed through HACS as a
    custom repository into `custom_components/device_watch/`, written like home_events.
    - files: manifest, config and options flow, store, sensors, WebSocket command,
      translations;

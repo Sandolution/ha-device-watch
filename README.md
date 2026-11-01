@@ -13,7 +13,7 @@ dashboard, anything else) is up to an automation of your own.
 ## Installation
 
 1. In HACS, open the menu → **Custom repositories**, and add
-   `https://github.com/sandolution/device-watch` with the type **Integration**.
+   `https://github.com/Sandolution/ha-device-watch` with the type **Integration**.
 2. Install **Device Watch** and restart Home Assistant.
 3. Go to **Settings → Devices & services → Add integration** and pick **Device Watch**.
    There is nothing to fill in.
