@@ -27,10 +27,10 @@ attributes will do.
 
 ### HACS
 
-1. In HACS, open the menu (⋮) → **Custom repositories**.
+1. In HACS, open the menu (⋮) > **Custom repositories**.
 2. Add `https://github.com/Sandolution/ha-device-watch` with the type **Integration**.
 3. Install **Device Watch** and restart Home Assistant.
-4. Go to **Settings → Devices & services → Add integration** and pick
+4. Go to **Settings > Devices & services > Add integration** and pick
    **Device Watch**. There is nothing to fill in.
 
 ### Manual
@@ -38,7 +38,7 @@ attributes will do.
 1. Copy `custom_components/device_watch` from this repository into
    `config/custom_components/`.
 2. Restart Home Assistant.
-3. Add it under **Settings → Devices & services → Add integration**.
+3. Add it under **Settings > Devices & services > Add integration**.
 
 ## What counts
 

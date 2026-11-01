@@ -1,9 +1,9 @@
-# Device Watch — specification (draft 1, 1 Nov 2026)
+# Device Watch specification (draft 1, 1 Nov 2026)
 
 Device Watch keeps an eye on every physical device in Home Assistant. It notices when a
 device drops off the network or its battery runs low, and says so by the device's own
-name. It replaces the two fixed-list automations (`* | Battery | Level …` and
-`* | Device - T# Unavailable …`), which forget every device added after they were
+name. It replaces the two fixed-list automations (`* | Battery | Level ...` and
+`* | Device - T# Unavailable ...`), which forget every device added after they were
 written.
 
 ## 1. Scope
@@ -48,7 +48,7 @@ list.
   devices. The parent's own guard reports the outage once. When the parent comes
   back, children that are still offline after their own delay are reported as usual.
 - **Grouping:** devices that reach their delay within 2 minutes of each other are sent
-  as one notification, e.g. "5 devices are offline: Garden | Wall | Back, …". This
+  as one notification, e.g. "5 devices are offline: Garden | Wall | Back, ...". This
   catches outages without a known parent, such as an MQTT broker restart, a Wi-Fi
   access point or a garden circuit. A single device is sent on its own.
 
@@ -71,7 +71,7 @@ list.
 
 ## 4. Settings
 
-**Options:** Settings → Devices & services → Device Watch → Configure. Changes apply at
+**Options:** Settings > Devices & services > Device Watch > Configure. Changes apply at
 once, without a restart.
 
 | Option | Default |
@@ -96,7 +96,7 @@ once, without a restart.
 The integration is a single config entry, set up through the UI. It adds a service
 device **System | Device Watch** with two sensors.
 
-**`sensor.system_device_watch_offline`** — *System | Device Watch | Offline*
+**`sensor.system_device_watch_offline`** (*System | Device Watch | Offline*)
 
 - State: the number of reported offline devices.
 - Attributes:
@@ -105,7 +105,7 @@ device **System | Device Watch** with two sensors.
   - `title`: the device name for one device, or "N devices offline";
   - `detail`: an empty string for one device, otherwise `names`.
 
-**`sensor.system_device_watch_battery_low`** — *System | Device Watch | Battery | Low*
+**`sensor.system_device_watch_battery_low`** (*System | Device Watch | Battery | Low*)
 
 - State: the number of devices with a reported low battery.
 - Attributes:
@@ -153,8 +153,8 @@ replaced by entries on the two sensors:
 ## 7. Migration (in the same batch, once it runs)
 
 **Remove:**
-- the automations `* | Battery | Level - T# Below 20% …` and `* | Device - T#
-  Unavailable (15m) …`;
+- the automations `* | Battery | Level - T# Below 20% ...` and `* | Device - T#
+  Unavailable (15m) ...`;
 - the "unavailable" half of the always-on plug guard, which keeps "switched off";
 - the "offline" half of the litter box rule, which keeps "stuck".
 
@@ -186,7 +186,7 @@ picture is not an offline device, because its switches and sensors stay up.
 3. **Check:** `device_watch/status` against the registry: which devices are watched,
    skipped and offline now. The notification automation stays off until this check
    passes.
-4. **Switch over:** apply the migration in §7, switch the notification automation on,
+4. **Switch over:** apply the migration in section 7, switch the notification automation on,
    and commit.
 
 ## 9. Not included
