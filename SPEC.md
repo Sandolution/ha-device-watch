@@ -83,7 +83,10 @@ once, without a restart.
 | Battery cleared above | 30 % |
 | Group window | 2 min |
 
-**Labels:** the integration creates these labels if they are missing.
+**Labels:** the integration creates these labels if they are missing. The options
+dialog shows them as three device lists (Not watched, Critical, No battery alerts) next
+to the thresholds; saving it gives and takes away the labels, so the labels stay the
+only place the setting lives.
 
 | Label | Effect |
 |---|---|

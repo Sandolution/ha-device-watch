@@ -1,7 +1,7 @@
 """Constants for Device Watch."""
 
 DOMAIN = "device_watch"
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 
 STORAGE_KEY = DOMAIN
 STORAGE_VERSION = 1

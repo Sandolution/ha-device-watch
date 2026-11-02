@@ -4,7 +4,7 @@
     "step": {
       "user": {
         "title": "Device Watch",
-        "description": "Watches every physical device for going offline and for a low battery, and reports it through events and two summary sensors. Per-device settings are the labels Device Watch | Unwatched, Critical and No Battery Alerts; the thresholds are under Configure."
+        "description": "Watches every physical device for going offline and for a low battery, and reports it through events and two summary sensors. Under Configure you choose which devices are not watched, critical or without battery alerts, and set the thresholds."
       }
     },
     "abort": {
@@ -14,27 +14,46 @@
   "options": {
     "step": {
       "init": {
-        "title": "Thresholds",
-        "data": {
-          "offline_minutes": "Offline after",
-          "critical_minutes": "Offline after (Critical)",
-          "battery_low": "Battery low below",
-          "battery_minutes": "Battery low for",
-          "battery_clear": "Battery cleared above",
-          "group_minutes": "Group window"
-        },
-        "data_description": {
-          "offline_minutes": "How long every entity of a device has to be unavailable before it is reported.",
-          "critical_minutes": "The same, for devices labelled Device Watch | Critical.",
-          "battery_low": "A battery level below this counts as low.",
-          "battery_minutes": "How long it has to stay low before it is reported.",
-          "battery_clear": "A reported battery is cleared once its level is above this - a new battery, not a reading wobbling around the low mark.",
-          "group_minutes": "Devices reported within this window of each other are sent as one notification."
+        "title": "Device Watch",
+        "description": "Every device is watched unless it is chosen under Not watched. The device lists are the labels Device Watch | Unwatched, Critical and No Battery Alerts: saving here changes the labels, and a label given on a device's own page shows up here.",
+        "sections": {
+          "devices": {
+            "name": "Devices",
+            "data": {
+              "unwatched": "Not watched",
+              "critical": "Critical",
+              "no_battery": "No battery alerts"
+            },
+            "data_description": {
+              "unwatched": "Ignored completely: never reported offline or for its battery. It still counts as a parent, so the devices behind it are not reported when it goes away. Wins over the other two.",
+              "critical": "Reported offline after the Critical delay, and the event says critical so the notification can be urgent.",
+              "no_battery": "Watched for going offline, but its battery is not."
+            }
+          },
+          "thresholds": {
+            "name": "Thresholds",
+            "data": {
+              "offline_minutes": "Offline after",
+              "critical_minutes": "Offline after (Critical)",
+              "battery_low": "Battery low below",
+              "battery_minutes": "Battery low for",
+              "battery_clear": "Battery cleared above",
+              "group_minutes": "Group window"
+            },
+            "data_description": {
+              "offline_minutes": "How long every entity of a device has to be unavailable before it is reported.",
+              "critical_minutes": "The same, for devices labelled Device Watch | Critical.",
+              "battery_low": "A battery level below this counts as low.",
+              "battery_minutes": "How long it has to stay low before it is reported.",
+              "battery_clear": "A reported battery is cleared once its level is above this - a new battery, not a reading wobbling around the low mark.",
+              "group_minutes": "Devices reported within this window of each other are sent as one notification."
+            }
+          }
         }
       }
     },
     "error": {
-      "clear_not_above_low": "Has to be above \"Battery low below\"."
+      "clear_not_above_low": "\"Battery cleared above\" has to be above \"Battery low below\"."
     }
   }
 }

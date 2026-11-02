@@ -73,30 +73,36 @@ Assistant starts, while MQTT devices are still coming back.
 
 ## Configuration
 
-### Labels
-
-Per device, set on the device page. Device Watch creates the labels when it
-starts, if they don't exist yet.
-
-| Label | Effect |
-|---|---|
-| Device Watch \| Unwatched | The device is ignored completely. It still counts as a parent for the devices under it. |
-| Device Watch \| Critical | Offline after the Critical delay instead of the normal one, and marked `critical: true` in the offline event. |
-| Device Watch \| No Battery Alerts | The device is watched for going offline; its battery is not. |
-
-A device without any of these labels is watched for both, with the normal delay.
-Use Unwatched for things that are off by design: a wall tablet that sleeps, a
-seasonal light, a module that loses power with its plug.
-
-### Options
-
-Under **Configure** on the integration. Changes apply without a restart. Adding
-the integration asks nothing; these are its only options.
+Everything is under **Configure** on the integration, in two sections: which
+devices are treated differently, and the thresholds. Adding the integration
+asks nothing. Changes apply without a restart.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="images/device-watch-options-dark.png">
   <img alt="The Device Watch options dialog" src="images/device-watch-options-light.png" width="480">
 </picture>
+
+### Devices
+
+Every device is watched for going offline and for its battery, with the normal
+delay, unless it is chosen in one of these lists:
+
+| List | Effect |
+|---|---|
+| Not watched | The device is ignored completely. It still counts as a parent for the devices under it. Wins over the other two. |
+| Critical | Offline after the Critical delay instead of the normal one, and marked `critical: true` in the offline event. |
+| No battery alerts | The device is watched for going offline; its battery is not. |
+
+Each list is a label: **Device Watch | Unwatched**, **Device Watch | Critical**
+and **Device Watch | No Battery Alerts**. Saving the dialog gives and takes away
+those labels, and a label given on a device's own page shows up in the dialog,
+so the two never disagree. Device Watch creates the labels when it starts, if
+they don't exist yet.
+
+Use Not watched for things that are off by design: a wall tablet that sleeps, a
+seasonal light, a module that loses power with its plug.
+
+### Thresholds
 
 | Option | Values | Default | What it does |
 |---|---|---|---|
